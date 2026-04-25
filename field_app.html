@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>圃場写真記録</title>
+<style>
+body { font-family: sans-serif; padding: 20px; }
+input, select, button { font-size: 18px; margin: 8px 0; width: 100%; }
+</style>
+</head>
+<body>
+
+<h2>圃場写真記録</h2>
+
+<label>圃場番号</label>
+<input type="text" id="field" placeholder="例：A">
+
+<label>畝番号</label>
+<input type="text" id="bed" placeholder="例：03">
+
+<label>株番号</label>
+<input type="number" id="plant" placeholder="例：12">
+
+<label>品種コード</label>
+<input type="text" id="variety" placeholder="例：2103">
+
+<label>症状</label>
+<select id="symptom">
+  <option value="normal">正常</option>
+  <option value="blackrot">黒腐病</option>
+  <option value="alternaria">黒すす病</option>
+  <option value="yellow">黄化</option>
+</select>
+
+<label>メモ</label>
+<input type="text" id="memo">
+
+<label>写真</label>
+<input type="file" accept="image/*" capture="environment" id="photo">
+
+<button onclick="saveData()">保存</button>
+
+<script>
+function saveData() {
+  const field = document.getElementById("field").value;
+  const bed = document.getElementById("bed").value;
+  const plant = document.getElementById("plant").value;
+  const variety = document.getElementById("variety").value;
+  const symptom = document.getElementById("symptom").value;
+  const memo = document.getElementById("memo").value;
+
+  const now = new Date();
+  const timestamp = now.toISOString().replace(/[-:]/g, "").slice(0,15);
+
+  const filename = `${timestamp}_F${field}_B${bed}_P${plant}_${variety}_${symptom}.jpg`;
+
+  alert("この名前で保存されます:\n" + filename);
+
+  // CSV保存（簡易）
+  const csvLine = `${timestamp},${filename},${field},${bed},${plant},${variety},${symptom},${memo}\n`;
+
+  let blob = new Blob([csvLine], { type: 'text/csv' });
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = "record.csv";
+  a.click();
+}
+</script>
+
+</body>
+</html>
